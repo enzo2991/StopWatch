@@ -16,6 +16,12 @@ def logs_spec(ctx,start_time,end_time,duree):
         f.write(log)
     return logs_spec
 
+def logs_spec_timeout(ctx,start_time):
+    log = "|" + str(start_time.strftime(timereturn) + "|\n" + f'Auteur : {ctx.author}\n Fin du spec: TimeOut\n Durée: TimeOut\n__________________________________________\n') 
+    with open('logs_spec.txt','a') as f:
+        f.write(log)
+    return logs_spec_timeout
+
 class spec(commands.Cog):
     def __init__(self,bot):
         self.bot = bot
@@ -28,10 +34,11 @@ class spec(commands.Cog):
         def check(reaction, user):
             return user == ctx.author and (str(reaction.emoji) in "❌")
         try:
-            reaction, user = await self.bot.wait_for('reaction_add', timeout=64800 , check=check)
+            reaction, user = await self.bot.wait_for('reaction_add', timeout=10 , check=check)
         except asyncio.TimeoutError:
             await ctx.message.delete()
             await ctx.send(f'<@{ctx.author.id}>, tu dors ?', delete_after=20)
+            logs_spec_timeout(ctx,start_time)
         else:
             end_time = datetime.datetime.now()
             duration  = end_time - start_time
@@ -43,7 +50,7 @@ class spec(commands.Cog):
             info.add_field(name="Debut du spec:",value=start_time.strftime(datereturn))
             info.add_field(name="Fin du spec:",value=end_time.strftime(datereturn))
             info.add_field(name="Durée:",value=convert)
-            await ctx.send(embed=info)
+            await ctx.send(embed=info,delete_after=15)
 
 class log(commands.Cog):
     def __init__(self,bot):
