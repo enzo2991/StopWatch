@@ -34,7 +34,7 @@ class spec(commands.Cog):
         def check(reaction, user):
             return user == ctx.author and (str(reaction.emoji) in "❌")
         try:
-            reaction, user = await self.bot.wait_for('reaction_add', timeout=10 , check=check)
+            reaction, user = await self.bot.wait_for('reaction_add', timeout=64800, check=check)
         except asyncio.TimeoutError:
             await ctx.message.delete()
             await ctx.send(f'<@{ctx.author.id}>, tu dors ?', delete_after=20)
