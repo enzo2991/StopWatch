@@ -13,4 +13,5 @@ async def on_ready():
      
 
 bot.add_cog(cogs.spec(bot))
+bot.add_cog(cogs.log(bot))
 bot.run(getenv("TOKEN"))
