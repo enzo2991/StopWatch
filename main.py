@@ -14,8 +14,8 @@ async def on_ready():
      print("Ready !")
      activiter = discord.Streaming(name="KellOog'S RP", url="https://twitch.tv/Weetoos")
      await bot.change_presence(activity=activiter)
-     
 
 bot.add_cog(cogs.spec(bot))
 bot.add_cog(cogs.log(bot))
+bot.add_cog(cogs.erreur(bot))
 bot.run(getenv("TOKEN"))

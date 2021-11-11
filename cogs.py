@@ -1,5 +1,4 @@
-from typing import Counter
-from discord.ext.commands.errors import CommandInvokeError
+from discord.ext.commands import CommandNotFound
 import discord
 from discord.ext import commands
 import datetime
@@ -71,3 +70,15 @@ class log(commands.Cog):
         else:
            await ctx.message.delete()
            await ctx.send(f'<@{user.id}> tu as pas le role pour executer cette commande',delete_after=15)
+
+class erreur(commands.Cog):
+    def __init__(self,bot):
+        self.bot = bot   
+
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx, error):
+        if isinstance(error, CommandNotFound):
+            erreur = discord.Embed(title='❌ERREUR❌', description=error, color=0xFF0000)
+            await ctx.message.delete()
+            await ctx.send(embed=erreur, delete_after=10)
+    
