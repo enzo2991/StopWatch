@@ -1,5 +1,6 @@
 from discord import activity
 from discord.ext import commands
+from discord.flags import Intents
 from dotenv import load_dotenv
 from os import getenv
 import cogs
@@ -7,7 +8,10 @@ import discord
 
 load_dotenv()
 
-bot = commands.Bot(command_prefix=".")
+intents = discord.Intents.default()
+intents.emojis = True
+
+bot = commands.Bot(command_prefix=".", Intents=intents)
 
 @bot.event
 async def on_ready():

@@ -30,29 +30,26 @@ class spec(commands.Cog):
         user = ctx.author
         start_time = datetime.datetime.now()
         await ctx.message.add_reaction("❌")
-        def check(reaction, user):
-            return user == ctx.author and (str(reaction.emoji) in "❌")
-        while True:
-            try:
-                reaction, user = await self.bot.wait_for('reaction_add', timeout=64800, check=check)
-            except asyncio.TimeoutError:
-                await ctx.message.delete()
-                await ctx.send(f'<@{ctx.author.id}>, tu dors ?', delete_after=20)
-                logs_spec_timeout(ctx,start_time)
-                break
-            else:
-                end_time = datetime.datetime.now()
-                duration  = end_time - start_time
-                duration_in_s = duration.total_seconds()
-                convert = function.convert_seconds(duration_in_s)
-                logs_spec(ctx,start_time,end_time,convert)
-                await ctx.message.delete()
-                info = discord.Embed(title=user, color=0x318bdb)
-                info.add_field(name="Debut du spec:",value=start_time.strftime(datereturn))
-                info.add_field(name="Fin du spec:",value=end_time.strftime(datereturn))
-                info.add_field(name="Durée:",value=convert)
-                await ctx.send(embed=info,delete_after=15)
-                break
+        def check(payload):
+            return payload.member.id == ctx.author.id and (str(payload.emoji) in "❌")
+        try:
+            reaction, user = await self.bot.wait_for('raw_reaction_add', timeout=43200, check=check)
+        except asyncio.TimeoutError:
+            await ctx.message.delete()
+            await ctx.send(f'<@{ctx.author.id}>, tu dors ?', delete_after=20)
+            logs_spec_timeout(ctx,start_time)
+        finally:
+            end_time = datetime.datetime.now()
+            duration  = end_time - start_time
+            duration_in_s = duration.total_seconds()
+            convert = function.convert_seconds(duration_in_s)
+            logs_spec(ctx,start_time,end_time,convert)
+            await ctx.message.delete()
+            info = discord.Embed(title=user, color=0x318bdb)
+            info.add_field(name="Debut du spec:",value=start_time.strftime(datereturn))
+            info.add_field(name="Fin du spec:",value=end_time.strftime(datereturn))
+            info.add_field(name="Durée:",value=convert)
+            await ctx.send(embed=info,delete_after=15)
 
 class log(commands.Cog):
     def __init__(self,bot):
